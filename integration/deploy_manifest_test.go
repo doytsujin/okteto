@@ -151,7 +151,7 @@ spec:
 
 		output, err := runOktetoDeploy(oktetoPath, repoDir)
 		if err != nil {
-			t.Fatal(err)
+			t.Fatal(err, output)
 		}
 
 		imageWithDigest, err := registry.GetImageTagWithDigest(expectedImage)
@@ -170,15 +170,15 @@ spec:
 		}
 
 		if err := expectBuiltImageNotFound(output); err != nil {
-			t.Fatal(err)
+			t.Fatal(err, output)
 		}
 
 		if err := expectHelmInstallation(output, releaseName, testNamespace); err != nil {
-			t.Fatal(err)
+			t.Fatal(err, output)
 		}
 
 		if err := expectEnvSetting(output, testNamespace, repoDir, sha); err != nil {
-			t.Fatal(err)
+			t.Fatal(err, output)
 		}
 
 	})
@@ -206,15 +206,15 @@ spec:
 		}
 
 		if err := expectImageFoundSkippingBuild(output); err != nil {
-			t.Fatal(err)
+			t.Fatal(err, output)
 		}
 
 		if err := expectHelmUpgrade(output, releaseName, testNamespace, "2"); err != nil {
-			t.Fatal(err)
+			t.Fatal(err, output)
 		}
 
 		if err := expectEnvSetting(output, testNamespace, repoDir, sha); err != nil {
-			t.Fatal(err)
+			t.Fatal(err, output)
 		}
 
 	})
@@ -242,15 +242,15 @@ spec:
 		}
 
 		if err := expectForceBuild(output); err != nil {
-			t.Fatal(err)
+			t.Fatal(err, output)
 		}
 
 		if err := expectHelmUpgrade(output, releaseName, testNamespace, "3"); err != nil {
-			t.Fatal(err)
+			t.Fatal(err, output)
 		}
 
 		if err := expectEnvSetting(output, testNamespace, repoDir, originalSHA); err != nil {
-			t.Fatal(err)
+			t.Fatal(err, output)
 		}
 
 	})
@@ -297,15 +297,15 @@ spec:
 		}
 
 		if err := expectForceBuild(output); err != nil {
-			t.Fatal(err)
+			t.Fatal(err, output)
 		}
 
 		if err := expectHelmUpgrade(output, releaseName, testNamespace, "4"); err != nil {
-			t.Fatal(err)
+			t.Fatal(err, output)
 		}
 
 		if err := expectEnvSetting(output, testNamespace, repoDir, newSHA); err != nil {
-			t.Fatal(err)
+			t.Fatal(err, output)
 		}
 
 	})
