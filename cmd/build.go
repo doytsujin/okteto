@@ -153,8 +153,8 @@ func buildV2(buildManifest model.ManifestBuild, cmdOptions build.BuildOptions, a
 	isSingleService := len(selectedArgs) == 1
 
 	// cmd flags only allowed when single service build
-	if !isSingleService && (cmdOptions.Tag != "" || cmdOptions.Target != "" || cmdOptions.CacheFrom != nil || cmdOptions.Secrets != nil) {
-		return fmt.Errorf("flags only allowed when building a single image with `okteto build [NAME]`")
+	if !isSingleService && (cmdOptions.Tag != "" || cmdOptions.Target != "" || cmdOptions.CacheFrom != nil || cmdOptions.Secrets != nil || cmdOptions.BuildArgs != nil) {
+		return fmt.Errorf("flags only allowed when building a single service with `okteto build [NAME]`")
 	}
 
 	if buildSelected {
@@ -179,6 +179,27 @@ func buildV2(buildManifest model.ManifestBuild, cmdOptions build.BuildOptions, a
 			}
 			if cmdOptions.Tag != "" {
 				manifestOpts.Image = cmdOptions.Tag
+			}
+			for _, a := range cmdOptions.BuildArgs {
+				kv := strings.SplitN(a, "=", 2)
+				if len(kv) != 2 {
+					return fmt.Errorf("error parsing BuildArg %s", a)
+				}
+				argValue, err := model.ExpandEnv(kv[1])
+				if err != nil {
+					return err
+				}
+				addToArgs := true
+				for _, env := range manifestOpts.Args {
+					if env.Name == kv[0] {
+						env.Value = argValue
+						addToArgs = false
+					}
+				}
+				if addToArgs {
+					manifestOpts.Args = append(manifestOpts.Args, model.EnvVar{Name: kv[0], Value: argValue})
+				}
+
 			}
 		}
 		if !okteto.Context().IsOkteto && manifestOpts.Image == "" {
