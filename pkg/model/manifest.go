@@ -337,7 +337,7 @@ func getManifestFromFile(cwd, manifestPath string) (*Manifest, error) {
 		if err != nil {
 			return nil, err
 		}
-		stackManifest.Manifest = s.Manifest
+		stackManifest.Manifest = s.RawManifest
 		oktetoLog.AddToBuffer(oktetoLog.InfoLevel, "Okteto compose unmarshalled successfully")
 		return stackManifest, nil
 	}
@@ -413,7 +413,7 @@ func GetInferredManifest(cwd string) (*Manifest, error) {
 			return nil, err
 		}
 		stackManifest.Deploy.ComposeSection.Stack = s
-		stackManifest.Manifest = s.Manifest
+		stackManifest.Manifest = s.RawManifest
 		oktetoLog.AddToBuffer(oktetoLog.InfoLevel, "Okteto compose unmarshalled successfully")
 
 		return stackManifest, nil

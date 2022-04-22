@@ -53,15 +53,16 @@ var (
 
 // Stack represents an okteto stack
 type Stack struct {
-	Manifest  []byte                 `yaml:"-"`
-	Warnings  StackWarnings          `yaml:"-"`
-	IsCompose bool                   `yaml:"-"`
-	Name      string                 `yaml:"name"`
-	Volumes   map[string]*VolumeSpec `yaml:"volumes,omitempty"`
-	Namespace string                 `yaml:"namespace,omitempty"`
-	Context   string                 `yaml:"context,omitempty"`
-	Services  map[string]*Service    `yaml:"services,omitempty"`
-	Endpoints EndpointSpec           `yaml:"endpoints,omitempty"`
+	RawManifest []byte                 `yaml:"-"`
+	Manifest    []byte                 `yaml:"-"`
+	Warnings    StackWarnings          `yaml:"-"`
+	IsCompose   bool                   `yaml:"-"`
+	Name        string                 `yaml:"name"`
+	Volumes     map[string]*VolumeSpec `yaml:"volumes,omitempty"`
+	Namespace   string                 `yaml:"namespace,omitempty"`
+	Context     string                 `yaml:"context,omitempty"`
+	Services    map[string]*Service    `yaml:"services,omitempty"`
+	Endpoints   EndpointSpec           `yaml:"endpoints,omitempty"`
 }
 
 // Service represents an okteto stack service
@@ -222,7 +223,7 @@ func GetStackFromPath(name, stackPath string, isCompose bool) (*Stack, error) {
 	if err != nil {
 		return nil, err
 	}
-
+	s.RawManifest = b
 	s.Name, err = getStackName(name, stackPath, s.Name)
 	if err != nil {
 		return nil, err

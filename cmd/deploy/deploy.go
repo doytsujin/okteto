@@ -321,7 +321,7 @@ func (dc *DeployCommand) RunDeploy(ctx context.Context, deployOptions *Options) 
 	}
 
 	if !deployOptions.Manifest.IsV2 && deployOptions.Manifest.Type == model.StackType {
-		data.Manifest = deployOptions.Manifest.Deploy.ComposeSection.Stack.Manifest
+		data.Manifest = deployOptions.Manifest.Deploy.ComposeSection.Stack.RawManifest
 	}
 	c, _, err := dc.K8sClientProvider.Provide(okteto.Context().Cfg)
 	if err != nil {
